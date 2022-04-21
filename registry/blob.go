@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/docker/distribution"
 	digest "github.com/opencontainers/go-digest"
@@ -100,6 +101,9 @@ func (registry *Registry) initiateUpload(repository string) (*url.URL, error) {
 	}
 
 	location := resp.Header.Get("Location")
+	if !strings.HasPrefix(location, "http://") && !strings.HasPrefix(location, "https://") {
+		location = registry.URL + location
+	}
 	locationURL, err := url.Parse(location)
 	if err != nil {
 		return nil, err
