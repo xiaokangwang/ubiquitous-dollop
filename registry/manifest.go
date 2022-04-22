@@ -2,6 +2,8 @@ package registry
 
 import (
 	"bytes"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 
@@ -120,6 +122,8 @@ func (registry *Registry) PutManifest(repository, reference string, manifest dis
 	req.Header.Set("Content-Type", mediaType)
 	resp, err := registry.Client.Do(req)
 	if resp != nil {
+		data, _ := io.ReadAll(resp.Body)
+		fmt.Println(string(data))
 		defer resp.Body.Close()
 	}
 	return err
